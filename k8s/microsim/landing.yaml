@@ -19,12 +19,22 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
+            # HTML + CSS
             - name: html
               mountPath: /usr/share/nginx/html
+
+            # Images (favicon, logo, bg)
+            - name: assets
+              mountPath: /usr/share/nginx/html/img
+              readOnly: true
       volumes:
         - name: html
           configMap:
             name: microsim-landing-html
+
+        - name: assets
+          configMap:
+            name: microsim-landing-assets
 ---
 apiVersion: v1
 kind: Service
