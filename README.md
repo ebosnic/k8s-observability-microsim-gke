@@ -17,7 +17,7 @@ The goal of this project is **not** to serve an application UI, but to:
   - Exports traces via OpenTelemetry
 - **Jaeger** collects and visualizes traces
 - **Grafana** visualizes metrics and traces
-- **Nginx Ingress Controller** exposes services
+- **NGINX Ingress Controller** exposes services
 - **cert-manager + Let’s Encrypt (Cloudflare)** provides TLS certificates
 - A **static landing page** explains the setup
 
@@ -96,36 +96,59 @@ Certificates are issued automatically for:
 
 ---
 
+## Security Headers (Important)
+
+All endpoints are protected by **TLS** and served exclusively over **HTTPS**.
+
+However, HTTP security headers (such as `Content-Security-Policy`, `X-Frame-Options`,
+`Strict-Transport-Security`, etc.) are **not injected at the ingress level**.
+
+### Reason
+
+The Kubernetes cluster’s **NGINX Ingress Controller is configured with snippet directives disabled**.
+This is a **cluster-wide security policy** that prevents the use of annotations such as:
+
+- `nginx.ingress.kubernetes.io/configuration-snippet`
+- `nginx.ingress.kubernetes.io/server-snippet`
+
+As a result, it is **not possible** to inject custom security headers via ingress annotations in this environment.
+
+### Implication
+
+- Security scanning tools (e.g. securityheaders.com) report **D-grade scores**
+- This is a **known and documented limitation**, not a misconfiguration
+- In clusters where ingress snippets or custom NGINX templates are allowed, all endpoints can be hardened to **A+**
+
+This setup reflects real-world constraints commonly found in **managed or shared Kubernetes environments**.
+
+---
+
 ## Repository Structure
 
 ```
-.
 ├── docs
 ├── k8s
-│   ├── namespaces
-│   │   └── namespaces.yaml
-│   ├── ingress
-│   │   ├── clusterissuer-letsencrypt.yaml
-│   │   ├── microsim-ingress.yaml
-│   │   └── observability-ingress.yaml
-│   ├── microsim
-│   │   ├── microsim.yaml
-│   │   ├── microsim-job.yaml
-│   │   ├── service.yaml
-│   │   ├── landing.yaml
-│   │   └── landing-configmap.yaml
-│   └── observability
-│       ├── grafana.yaml
-│       ├── jaeger.yaml
-│       └── services.yaml
+│ ├── namespaces
+│ │ └── namespaces.yaml
+│ ├── ingress
+│ │ ├── clusterissuer-letsencrypt.yaml
+│ │ ├── microsim-ingress.yaml
+│ │ └── observability-ingress.yaml
+│ ├── microsim
+│ │ ├── microsim.yaml
+│ │ ├── microsim-job.yaml
+│ │ ├── service.yaml
+│ │ ├── landing.yaml
+│ │ └── landing-configmap.yaml
+│ └── observability
+│ ├── grafana.yaml
+│ ├── jaeger.yaml
+│ └── observability-certificate.yaml
 └── README.md
-
 ```
-
-Deployment Order (Important)
+## Deployment Order (Important)
 
 Apply manifests in this order:
-
 ```
 kubectl apply -f k8s/namespaces/
 kubectl apply -f k8s/ingress/clusterissuer-letsencrypt.yaml
@@ -135,15 +158,10 @@ kubectl apply -f k8s/microsim/
 kubectl apply -f k8s/ingress/microsim-ingress.yaml
 ```
 
-Notes
+## Notes
 
-    This is a demo / lab environment
-
-    Jaeger is intentionally public
-
-    Grafana authentication is enabled
-
-    No secrets or credentials are stored in Git
-
-    All TLS certificates are managed automatically
-
+- This is a **demo / lab environment**
+- Jaeger is intentionally public
+- Grafana authentication is enabled
+- No secrets or credentials are stored in Git
+- All TLS certificates are managed automatically
