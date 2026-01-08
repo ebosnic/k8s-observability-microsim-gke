@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microsim-frontend
+  namespace: microsim-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microsim
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: microsim
+        component: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: yurishkuro/microsim:latest
+          env:
+            - name: SERVICE_NAME
+              value: frontend
+            - name: SERVICE_PORT
+              value: "8080"
+            - name: DOWNSTREAM
+              value: service-a,service-b
+          ports:
+            - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microsim-service-a
+  namespace: microsim-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microsim
+      component: service-a
+  template:
+    metadata:
+      labels:
+        app: microsim
+        component: service-a
+    spec:
+      containers:
+        - name: service-a
+          image: yurishkuro/microsim:latest
+          env:
+            - name: SERVICE_NAME
+              value: service-a
+            - name: SERVICE_PORT
+              value: "8080"
+            - name: DOWNSTREAM
+              value: service-c
+          ports:
+            - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microsim-service-b
+  namespace: microsim-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microsim
+      component: service-b
+  template:
+    metadata:
+      labels:
+        app: microsim
+        component: service-b
+    spec:
+      containers:
+        - name: service-b
+          image: yurishkuro/microsim:latest
+          env:
+            - name: SERVICE_NAME
+              value: service-b
+            - name: SERVICE_PORT
+              value: "8080"
+          ports:
+            - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microsim-service-c
+  namespace: microsim-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microsim
+      component: service-c
+  template:
+    metadata:
+      labels:
+        app: microsim
+        component: service-c
+    spec:
+      containers:
+        - name: service-c
+          image: yurishkuro/microsim:latest
+          env:
+            - name: SERVICE_NAME
+              value: service-c
+            - name: SERVICE_PORT
+              value: "8080"
+          ports:
+            - containerPort: 8080
+

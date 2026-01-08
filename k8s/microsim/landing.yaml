@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microsim-landing
+  namespace: microsim-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microsim-landing
+  template:
+    metadata:
+      labels:
+        app: microsim-landing
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: html
+          configMap:
+            name: microsim-landing-html
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microsim-landing
+  namespace: microsim-dev
+spec:
+  selector:
+    app: microsim-landing
+  ports:
+    - port: 80
+      targetPort: 80
+

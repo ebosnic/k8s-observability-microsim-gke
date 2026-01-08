@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: microsim-frontend
+  namespace: microsim-dev
+spec:
+  selector:
+    app: microsim
+    component: frontend
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-a
+  namespace: microsim-dev
+spec:
+  selector:
+    app: microsim
+    component: service-a
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-b
+  namespace: microsim-dev
+spec:
+  selector:
+    app: microsim
+    component: service-b
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-c
+  namespace: microsim-dev
+spec:
+  selector:
+    app: microsim
+    component: service-c
+  ports:
+    - port: 80
+      targetPort: 8080
+
