@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: observability-ingress
+  namespace: observability
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-cloudflare
+spec:
+  tls:
+  - hosts:
+    - grafana.microsim.dev.piratesec.com
+    - traces.microsim.dev.piratesec.com
+    secretName: observability-tls
+  rules:
+  - host: grafana.microsim.dev.piratesec.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
+  - host: traces.microsim.dev.piratesec.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jaeger
+            port:
+              number: 16686
+
