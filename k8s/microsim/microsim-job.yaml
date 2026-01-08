@@ -9,14 +9,15 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: microsim
-          image: yurishkuro/microsim:latest
-          args:
-            - "-w=1"
-            - "-r=10"
-          env:
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: "http://otel-collector.observability:4318"
-            - name: OTEL_EXPORTER_OTLP_INSECURE
-              value: "true"
+      - name: microsim
+        image: yurishkuro/microsim:latest
+        args:
+          - frontend
+        env:
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://jaeger-collector.observability.svc.cluster.local:4318
+        - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+          value: http://jaeger-collector.observability.svc.cluster.local:4318/v1/traces
+        - name: OTEL_EXPORTER_OTLP_INSECURE
+          value: "true"
 
