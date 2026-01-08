@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microsim
+  namespace: microsim-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microsim
+  template:
+    metadata:
+      labels:
+        app: microsim
+    spec:
+      containers:
+      - name: microsim
+        image: yurishkuro/microsim:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SERVICE_NAME
+          value: microsim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microsim
+  namespace: microsim-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: microsim
+  ports:
+  - port: 80
+    targetPort: 8080
+
