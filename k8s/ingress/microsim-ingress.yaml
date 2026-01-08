@@ -4,10 +4,16 @@ metadata:
   name: microsim-ingress
   namespace: microsim-dev
   annotations:
-    kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-cloudflare
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+    # Security headers (supported, safe)
+    nginx.ingress.kubernetes.io/hsts: "true"
+    nginx.ingress.kubernetes.io/hsts-max-age: "63072000"
+    nginx.ingress.kubernetes.io/hsts-include-subdomains: "true"
+    nginx.ingress.kubernetes.io/hsts-preload: "true"
 spec:
+  ingressClassName: nginx
   tls:
     - hosts:
         - microsim.dev.piratesec.com
