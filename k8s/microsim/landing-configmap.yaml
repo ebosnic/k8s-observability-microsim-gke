@@ -36,9 +36,12 @@ data:
           </p>
 
           <nav class="links">
-            <a href="https://grafana.microsim.dev.piratesec.com" target="_blank">Grafana</a>
-            <span>|</span>
-            <a href="https://traces.microsim.dev.piratesec.com" target="_blank">Jaeger</a>
+            <a class="cta grafana" href="https://grafana.microsim.dev.piratesec.com" target="_blank" rel="noopener">
+              Grafana
+            </a>
+            <a class="cta jaeger" href="https://traces.microsim.dev.piratesec.com" target="_blank" rel="noopener">
+              Jaeger
+            </a>
           </nav>
         </div>
       </main>
@@ -50,7 +53,11 @@ data:
     </html>
 
   style.css: |
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     html, body {
       height: 100%;
@@ -70,7 +77,7 @@ data:
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.18);
+      background: rgba(0, 0, 0, 0.18);
       z-index: 0;
     }
 
@@ -90,14 +97,65 @@ data:
       width: 520px;
       max-width: 80vw;
       margin-bottom: 32px;
-      filter: drop-shadow(0 10px 25px rgba(0,0,0,.7));
+      filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.7));
     }
 
     .glass {
-      background: rgba(0,0,0,.65);
+      background: rgba(0, 0, 0, 0.65);
       border-radius: 18px;
       padding: 32px 36px;
-      box-shadow: 0 30px 60px rgba(0,0,0,.85);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.85);
+    }
+
+    .glass h1 {
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+    }
+
+    .glass p {
+      margin-bottom: 12px;
+      line-height: 1.6;
+      opacity: 0.92;
+    }
+
+    .links {
+      margin-top: 20px;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      color: #fff;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.8);
+    }
+
+    .cta.grafana {
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+    }
+
+    .cta.grafana:hover {
+      background: linear-gradient(135deg, #fbbf24, #fb923c);
+    }
+
+    .cta.jaeger {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .cta.jaeger:hover {
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
     }
 
     .footer {
@@ -105,7 +163,7 @@ data:
       bottom: 12px;
       width: 100%;
       text-align: center;
-      font-size: .75rem;
-      opacity: .65;
+      font-size: 0.75rem;
+      opacity: 0.65;
     }
 
